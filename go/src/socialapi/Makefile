@@ -51,7 +51,7 @@ all: testapi
 
 develop: apidev topicfeeddev realtimedev populartopicdev popularpostdev \
 	notificationdev trollmodeldev pinnedpostdev algoliaconnectordev \
-	emaildev sitemapdev collaborationdev mailsenderdev topicmoderationdev \
+	emaildev sitemapdev collaborationdev mailsenderdev \
 	teamdev eventsenderdev integrationdev
 minimal: apidev topicfeeddev realtimedev pinnedpostdev
 default: configure
@@ -127,11 +127,6 @@ collaborationdev:
 mailsenderdev:
 	@echo "$(OK_COLOR)==> Running Mailsender Worker $(NO_COLOR)"
 	@$(GOBINDIR)/watcher -run socialapi/workers/cmd/email/emailsender -watch socialapi/workers/email/emailsender -c $(CONFIG) $(DBG) $(EXTRAS)
-
-
-topicmoderationdev:
-	@echo "$(OK_COLOR)==> Running Topic Moderation Worker $(NO_COLOR)"
-	@$(GOBINDIR)/watcher -run socialapi/workers/cmd/topicmoderation -watch socialapi/workers/moderation -c $(CONFIG) $(DBG) $(EXTRAS)
 
 onfiguremigration:
 	(vagrant ssh default --command "mongo localhost/koding --eval='db.relationships.update({},{\$$unset:{migrationStatus:0}},{multi:true})'")
@@ -259,20 +254,6 @@ testteamintegration:
 	@./tests.test $(DBG) $(EXTRAS) -c $(CONFIG)
 	@rm ./tests.test
 
-testmoderation: testmoderationunit testmoderationintegration
-
-testmoderationunit:
-	@echo "$(OK_COLOR)--> moderation unit tests... $(NO_COLOR)"
-	@`which go` test -c workers/moderation/topic/*.go
-	@./topic.test $(DBG) $(EXTRAS) -c $(CONFIG)
-	@rm ./topic.test
-
-testmoderationintegration:
-	@echo "$(OK_COLOR)--> moderation integration tests... $(NO_COLOR)"
-	@`which go` test -c workers/moderation/topic/tests/*.go
-	@./tests.test $(DBG) $(EXTRAS) -c $(CONFIG)
-	@rm ./tests.test
-
 testalgolia:
 	@echo "$(OK_COLOR)--> algoliaconnector unit tests... $(NO_COLOR)"
 	@`which go` test -c workers/algoliaconnector/algoliaconnector/*.go
@@ -384,7 +365,7 @@ testrealtime:
 
 
 testapi: testcollaboration testmailsender testmail testmodels testemailworker \
-	testmoderation testtopicfeeed testnotification testtrollmode \
+ 	testtopicfeeed testnotification testtrollmode \
 	testteam testintegration testrealtime testwebhook testpresence
 
 	@echo "$(OK_COLOR)==> Running Unit tests $(NO_COLOR)"
