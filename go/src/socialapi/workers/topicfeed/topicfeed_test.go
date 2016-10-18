@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"socialapi/config"
 	"socialapi/models"
-	"socialapi/request"
 	"socialapi/workers/topicfeed"
 	"testing"
 
@@ -137,32 +136,6 @@ func TestMessageSaved(t *testing.T) {
 
 		Convey("for non koding groups", func() {
 			account, groupChannel, groupName := models.CreateRandomGroupDataWithChecks()
-
-			Convey("we should not create channels automatically", func() {
-				// just a random topic name
-				topicName := models.RandomGroupName()
-				c := models.NewChannelMessage()
-				c.InitialChannelId = groupChannel.Id
-				c.AccountId = account.Id
-				c.Body = "my test topic #" + topicName
-				c.TypeConstant = models.ChannelMessage_TYPE_POST
-
-				// create with unscoped
-				err := bongo.B.Unscoped().Table(c.TableName()).Create(c).Error
-				So(err, ShouldBeNil)
-
-				So(controller.MessageSaved(c), ShouldBeNil)
-
-				Convey("channel should not exists", func() {
-					// byname doesnt filter
-					_, err := models.NewChannel().ByName(&request.Query{
-						Name:      topicName,
-						GroupName: groupChannel.GroupName,
-						AccountId: account.Id,
-					})
-					So(err, ShouldEqual, bongo.RecordNotFound)
-				})
-			})
 
 			Convey("even if channel exists", func() {
 				topicChannel1 := models.CreateTypedGroupedChannelWithTest(account.Id, models.Channel_TYPE_TOPIC, groupName)
