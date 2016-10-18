@@ -80,13 +80,6 @@ func (f *Controller) ensureChannelMessages(parentChannel *models.Channel, data *
 			return err
 		}
 
-		if err == bongo.RecordNotFound {
-			tc, err = f.createTopicChannel(data.AccountId, parentChannel.GroupName, topic, parentChannel.PrivacyConstant)
-			if err != nil {
-				return err
-			}
-		}
-
 		// message list relationship is already created in Message.Create
 		if tc.Id == data.InitialChannelId {
 			continue
@@ -349,9 +342,9 @@ func (f *Controller) fetchTopicChannel(groupName, channelName string) (*models.C
 		Where("group_name = ?", groupName).
 		Where("name = ?", channelName).
 		Where("type_constant IN (?)", []string{
-			models.Channel_TYPE_TOPIC,
-			models.Channel_TYPE_LINKED_TOPIC,
-		}).
+		models.Channel_TYPE_TOPIC,
+		models.Channel_TYPE_LINKED_TOPIC,
+	}).
 		Order("id asc").
 		Find(&topics).Error
 
@@ -399,46 +392,5 @@ func (f *Controller) fetchTopicChannel(groupName, channelName string) (*models.C
 		return channel, nil
 	}
 
-	return channel.FetchRoot()
-}
-
-func (f *Controller) createTopicChannel(creatorId int64, groupName, channelName, privacy string) (*models.Channel, error) {
-	c := models.NewChannel()
-	c.Name = channelName
-	c.CreatorId = creatorId
-	c.GroupName = groupName
-	c.Purpose = fmt.Sprintf("Channel for %s topic", channelName)
-	c.TypeConstant = models.Channel_TYPE_TOPIC
-	c.PrivacyConstant = privacy
-	// add moderation needed flag only for koding group
-	// and if feature is not disabled
-	if !f.config.DisabledFeatures.Moderation && c.GroupName == models.Channel_KODING_NAME {
-		// newly created channels need moderation
-		c.MetaBits.Mark(models.NeedsModeration)
-	}
-	err := c.Create()
-	if err == nil {
-		return c, nil
-	}
-
-	// same topic can be created in parallel
-	if models.IsUniqueConstraintError(err) {
-		// just fetch the topic from db
-		c2 := models.NewChannel()
-		err = c2.One(&bongo.Query{
-			Selector: map[string]interface{}{
-				"name":             channelName,
-				"group_name":       groupName,
-				"type_constant":    models.Channel_TYPE_TOPIC,
-				"privacy_constant": privacy,
-			},
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		return c2, nil
-	}
-
-	return nil, err
+	return nil, nil
 }
