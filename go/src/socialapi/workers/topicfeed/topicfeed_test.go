@@ -133,22 +133,6 @@ func TestMessageSaved(t *testing.T) {
 			So(err, ShouldBeNil)
 
 			So(controller.MessageSaved(c), ShouldBeNil)
-
-			Convey("should have moderation flag", func() {
-				// byname doesnt filter
-				channel, err := models.NewChannel().ByName(&request.Query{
-					Name:      topicName,
-					GroupName: groupChannel.GroupName,
-					AccountId: account.Id,
-				})
-				So(err, ShouldBeNil)
-				So(channel, ShouldNotBeNil)
-				if appConfig.DisabledFeatures.Moderation {
-					So(channel.MetaBits.Is(models.NeedsModeration), ShouldBeFalse)
-				} else {
-					So(channel.MetaBits.Is(models.NeedsModeration), ShouldBeTrue)
-				}
-			})
 		})
 
 		Convey("for non koding groups", func() {
@@ -260,32 +244,6 @@ func TestFetchTopicChannel(t *testing.T) {
 			So(err, ShouldBeNil)
 			So(c1, ShouldNotBeNil)
 			So(c1.Id, ShouldEqual, normalChannel.Id)
-		})
-
-		Convey("when we link to another channel", func() {
-
-			rootChannel := models.NewChannel()
-			rootChannel.CreatorId = account.Id
-			rootChannel.GroupName = groupChannel.GroupName
-			rootChannel.TypeConstant = models.Channel_TYPE_TOPIC
-			rootChannel.PrivacyConstant = models.Channel_PRIVACY_PUBLIC
-			So(rootChannel.Create(), ShouldBeNil)
-			cl := &models.ChannelLink{
-				RootId: rootChannel.Id,
-				LeafId: normalChannel.Id,
-			}
-			So(cl.Create(), ShouldBeNil)
-
-			// make it linked
-			normalChannel.TypeConstant = models.Channel_TYPE_LINKED_TOPIC
-			So(normalChannel.Update(), ShouldBeNil)
-
-			Convey("it should fetch the root channel", func() {
-				c2, err := controller.fetchTopicChannel(normalChannel.GroupName, normalChannel.Name)
-				So(err, ShouldBeNil)
-				So(c2, ShouldNotBeNil)
-				So(c2.Id, ShouldEqual, rootChannel.Id)
-			})
 		})
 	})
 }
