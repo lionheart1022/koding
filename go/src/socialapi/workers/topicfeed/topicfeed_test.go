@@ -114,26 +114,6 @@ func TestMessageSaved(t *testing.T) {
 			})
 		})
 
-		Convey("newly created channels of koding group", func() {
-			account := models.CreateAccountWithTest()
-			groupChannel := models.CreateTypedGroupedChannelWithTest(account.Id, models.Channel_TYPE_GROUP, "koding")
-
-			// just a random topic name
-			topicName := models.RandomName()
-
-			c := models.NewChannelMessage()
-			c.InitialChannelId = groupChannel.Id
-			c.AccountId = account.Id
-			c.Body = "my test topic #" + topicName
-			c.TypeConstant = models.ChannelMessage_TYPE_POST
-
-			// create with unscoped
-			err := bongo.B.Unscoped().Table(c.TableName()).Create(c).Error
-			So(err, ShouldBeNil)
-
-			So(controller.MessageSaved(c), ShouldBeNil)
-		})
-
 		Convey("for non koding groups", func() {
 			account, _, groupName := models.CreateRandomGroupDataWithChecks()
 
