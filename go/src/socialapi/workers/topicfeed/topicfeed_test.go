@@ -135,7 +135,7 @@ func TestMessageSaved(t *testing.T) {
 		})
 
 		Convey("for non koding groups", func() {
-			account, groupChannel, groupName := models.CreateRandomGroupDataWithChecks()
+			account, _, groupName := models.CreateRandomGroupDataWithChecks()
 
 			Convey("even if channel exists", func() {
 				topicChannel1 := models.CreateTypedGroupedChannelWithTest(account.Id, models.Channel_TYPE_TOPIC, groupName)
