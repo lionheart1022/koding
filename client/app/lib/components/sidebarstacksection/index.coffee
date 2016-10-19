@@ -229,9 +229,7 @@ module.exports = class SidebarStackSection extends React.Component
       {@renderStackUpdatedWidget()}
     </SidebarSection>
 
-isStackMine = (stackOriginId, myId) ->
-  console.log 'isStackMine', stackOriginId is myId
-  stackOriginId is myId
+isStackMine = (stackOriginId, myId) -> stackOriginId is myId
 
 
 React.Component.include.call SidebarStackSection, [KDReactorMixin]
