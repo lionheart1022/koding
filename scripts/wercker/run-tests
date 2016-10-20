@@ -2,6 +2,8 @@
 
 set -o errexit
 
+set -o xtrace
+
 HOST=$(head -n1 $1 | awk '{ print $2}')
 CUSTOM_URL="http://$HOST:8090"
 
