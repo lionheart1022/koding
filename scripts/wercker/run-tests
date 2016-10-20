@@ -13,11 +13,15 @@ fi
 pushd ./tests
 
 rainforest validate --token $RAINFOREST_TOKEN
-
 rainforest upload --token $RAINFOREST_TOKEN
-
-rainforest run --token $RAINFOREST_TOKEN \
+rainforest run \
+           --token $RAINFOREST_TOKEN \
            --tag automated \
            --custom-url $CUSTOM_URL \
            --description "wercker build for ${WERCKER_GIT_COMMIT:0:8}" \
-           --fg
+           > /tmp/RAINFOREST.run
+
+RESULT_LINE=$(tail -n1 RAINFOREST.run | grep 'Issued run')
+
+[ -n "$RESULT_LINE" ] && \
+  echo $RESULT_LINE | awk '{print $NF}' > RAINFOREST.run_id

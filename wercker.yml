@@ -156,6 +156,21 @@ build:
         name: run test suites
         code: scripts/wercker/run-command scripts/wercker/run-tests INSTANCE_DATA
     - script:
+        name: wait test suites 1
+        code: scripts/wercker/run-command scripts/wercker/wait-tests
+    - script:
+        name: wait test suites 2
+        code: scripts/wercker/run-command scripts/wercker/wait-tests
+    - script:
+        name: wait test suites 3
+        code: scripts/wercker/run-command scripts/wercker/wait-tests
+    - script:
+        name: wait test suites 4
+        code: scripts/wercker/run-command scripts/wercker/wait-tests
+    - script:
+        name: wait test suites 5
+        code: scripts/wercker/run-command scripts/wercker/wait-tests
+    - script:
         name: testing client finished
         code: |
           scripts/notify-cebeci.sh "build" "<$WERCKER_BUILD_URL|build> of $WERCKER_GIT_BRANCH - test client finished" "building" 85

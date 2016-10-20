@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -o errexit
+set -o xtrace
+
+rainforest run \
+           --token $RAINFOREST_TOKEN \
+           --wait $(cat RAINFOREST.run_id) > RAINFOREST.wait_output \
+  && echo 0 > RAINFOREST.wait_exit \
+  || echo 1 RAINFOREST.wait_exit &
+
+PID=$?
+
+sleep 24 * 60
+
+kill -TERM $PID
+
+[ -f RAINFOREST.wait_exit ] \
+  && exit $(cat RAINFOREST.wait_exit) \
+  || exit 0
