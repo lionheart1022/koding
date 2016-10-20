@@ -30,40 +30,12 @@ npm install --unsafe-perm
 go/build.sh
 make -C client dist
 
-TEST_EXTRAS="--no-start-selenium --url http://$HOST:8090" \
-  make -C client/test build
-
 ./run services
 
 sleep 60 # let dockers boot up
 
 ./run migrate up
-./run resetdb --yes
-./run importusers
 
 ./run exec supervisord -c $REPOSITORY_PATH/supervisord.conf
-
-export TEST_VENDOR=$REPOSITORY_PATH/client/test/vendor
-
-export DISPLAY=:0
-Xvfb $DISPLAY -shmem -screen 0 1440x900x16 &
-java -jar $TEST_VENDOR/selenium-server-standalone.jar \
-     -host 0.0.0.0 \
-     -port 42420 \
-     -Dwebdriver.gecko.driver=$TEST_VENDOR/geckodriver/linux64/geckodriver \
-     &> $REPOSITORY_PATH/.logs/selenium-host.log &
-
-export DISPLAY=:1
-Xvfb $DISPLAY -shmem -screen 1 1440x900x16 &
-java -jar $TEST_VENDOR/selenium-server-standalone.jar \
-     -host 0.0.0.0 \
-     -port 42421 \
-     -Dwebdriver.gecko.driver=$TEST_VENDOR/geckodriver/linux64/geckodriver \
-     &> $REPOSITORY_PATH/.logs/selenium-participant.log &
-
-sleep 10
-
-x11vnc -passwd secret -display :0 -N -forever &
-x11vnc -passwd secret -display :1 -N -forever &
 
 exit 0
