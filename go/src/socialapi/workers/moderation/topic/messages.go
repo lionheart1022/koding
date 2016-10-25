@@ -3,7 +3,6 @@ package topic
 import (
 	"fmt"
 	"socialapi/models"
-	"socialapi/workers/iterator"
 	"strings"
 	"time"
 
@@ -55,8 +54,8 @@ func (c *Controller) moveMessages(cl *models.ChannelLink) error {
 		toBeReplacedSourceString,
 		toBeReplacedTargetString,
 	)
-
-	return iterator.MessageLists(log, cl.LeafId, f, sleepTimeForMoveMessages)
+	return nil
+	// return iterator.MessageLists(log, cl.LeafId, f, sleepTimeForMoveMessages)
 }
 
 func (c *Controller) processMessageLists(
