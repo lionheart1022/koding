@@ -2,6 +2,7 @@ package google
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"koding/kites/kloud/eventer"
@@ -94,8 +95,10 @@ func (m *Machine) Start(ctx context.Context) (interface{}, error) {
 
 // Start stops Google compute instance.
 func (m *Machine) Stop(ctx context.Context) (interface{}, error) {
+	log.Println("Stop started")
 	ev, withPush := eventer.FromContext(ctx)
 	if withPush {
+		log.Println("With push 25")
 		ev.Push(&eventer.Event{
 			Message:    "Stopping machine",
 			Status:     machinestate.Stopping,
@@ -106,6 +109,7 @@ func (m *Machine) Stop(ctx context.Context) (interface{}, error) {
 	project, zone, name := m.Location()
 	_, err := m.InstancesService.Stop(project, zone, name).Do()
 	// Ignore http.StatusNotModified status.
+	log.Println("Instance stop: ", project, zone, name, err)
 	if err != nil && googleapi.IsNotModified(err) {
 		if withPush {
 			ev.Push(&eventer.Event{
@@ -121,6 +125,7 @@ func (m *Machine) Stop(ctx context.Context) (interface{}, error) {
 	}
 
 	stateFunc := func(currentPercentage int) (machinestate.State, error) {
+		log.Println("State func ran")
 		if withPush {
 			ev.Push(&eventer.Event{
 				Message:    "Stopping machine",
@@ -130,6 +135,7 @@ func (m *Machine) Stop(ctx context.Context) (interface{}, error) {
 		}
 
 		state, _, err := m.Info(nil)
+		log.Println("current state: ", state, err)
 		return state, err
 	}
 
