@@ -43,7 +43,7 @@
     "dns": "0.2.2",
     "dogapi": "0.1.8",
     "embedly": "1.0.4",
-    "es": "0.4.x",
+    "es": "0.7.x",
     "eventemitter2": "1.0.3",
     "express": "4.9.5",
     "express-session": "1.10.4",
