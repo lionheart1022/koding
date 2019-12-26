@@ -69,7 +69,7 @@
     "lodash.clonedeep": "3.0.2",
     "marked": "0.3.1",
     "mime": "1.2.x",
-    "minimist": "0.0.8",
+    "minimist": "1.2.0",
     "mkdirp": "0.3.2",
     "mongodb": "1.4.14",
     "mongodb-migrate": "2.0.1",
