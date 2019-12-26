@@ -96,7 +96,7 @@
     "stripcolorcodes": "0.1.0",
     "stylus": "0.37.0",
     "toml-js": "0.0.8",
-    "tough-cookie": "0.12.1",
+    "tough-cookie": "3.0.1",
     "traverse": "0.6.6",
     "ua-parser-js": "0.6.2",
     "uglify-js": "2.4.19",
