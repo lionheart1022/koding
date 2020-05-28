@@ -68,7 +68,7 @@
     "lodash": "3.10.1",
     "lodash.clonedeep": "3.0.2",
     "marked": "0.3.1",
-    "mime": "1.2.x",
+    "mime": "2.4.x",
     "minimist": "0.0.8",
     "mkdirp": "0.3.2",
     "mongodb": "1.4.14",
