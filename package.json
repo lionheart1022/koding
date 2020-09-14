@@ -71,7 +71,7 @@
     "mime": "1.2.x",
     "minimist": "0.0.8",
     "mkdirp": "0.3.2",
-    "mongodb": "1.4.14",
+    "mongodb": "3.6.2",
     "mongodb-migrate": "2.0.1",
     "nib": "1.1.0",
     "node-dogstatsd": "0.0.6",
