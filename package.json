@@ -52,7 +52,7 @@
     "git-rev": "0.2.1",
     "github": "0.2.4",
     "gitlab": "1.7.0",
-    "googleapis": "1.1.5",
+    "googleapis": "70.0.0",
     "gulp": "3.8.11",
     "hat": "0.0.3",
     "helmet": "0.2.4",
