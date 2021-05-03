@@ -111,7 +111,7 @@
     "yield-siftscience": "0.0.8"
   },
   "devDependencies": {
-    "chai": "2.2.0",
+    "chai": "4.3.4",
     "coffeelint": "1.11.1",
     "crypto": "0.0.3",
     "mocha": "2.2.4",
